@@ -508,12 +508,19 @@ QR_SECRET = data.secret
 async function startQR(mode){
 
 scanMode = mode
+scanOnce = false
 
 if(!QR_SECRET){
 await getQRSecret()
 }
 
 document.getElementById("qrScanner").classList.remove("hidden")
+
+if(html5QrCode){
+try{
+await html5QrCode.stop()
+}catch(e){}
+}
 
 html5QrCode = new Html5Qrcode("reader")
 
@@ -524,6 +531,10 @@ fps:10,
 qrbox:250
 },
 (qrCodeMessage)=>{
+
+if(scanOnce) return
+
+scanOnce = true
 
 if(qrCodeMessage.trim() === QR_SECRET){
 
@@ -540,6 +551,7 @@ absenPulang()
 }else{
 
 alert("QR Code tidak valid")
+stopScanner()
 
 }
 
@@ -547,7 +559,6 @@ alert("QR Code tidak valid")
 )
 
 }
-
 function stopScanner(){
 
 if(html5QrCode){
@@ -562,3 +573,4 @@ document.getElementById("qrScanner").classList.add("hidden")
 
 </body>
 </html>
+
