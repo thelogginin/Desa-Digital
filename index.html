@@ -1,46 +1,564 @@
 <!DOCTYPE html>
-<html lang="id">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>DESA DIGITAL</title>
-  <link rel="icon" href="https://i.imgur.com/ixTcqjR.png" />
-  <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      width: 100%;
-      height: 100%;
-      background-color: #eee;
-      overflow: hidden; /* Mencegah scroll ganda */
-    }
 
-    .iframe-container {
-      width: 100%;
-      height: 100dvh; /* Menggunakan dvh agar pas di mobile browser */
-      overflow: hidden;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-    iframe {
-      display: block;
-      width: 100%;
-      height: 100%;
-      border: none;
-    }
-  </style>
+<title>Absensi Desa</title>
+<script src="https://unpkg.com/html5-qrcode"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+
+body{
+font-family:Arial;
+background:#f3f5ff;
+margin:0;
+}
+
+.container{
+max-width:480px;
+margin:auto;
+padding:20px;
+}
+
+.card{
+background:white;
+border-radius:15px;
+padding:20px;
+margin-bottom:15px;
+box-shadow:0 3px 10px rgba(0,0,0,0.1);
+}
+
+.center{text-align:center}
+
+img.avatar{
+width:120px;
+height:120px;
+border-radius:100%;
+object-fit:cover;
+}
+
+.btn{
+width:100%;
+padding:14px;
+border:none;
+border-radius:10px;
+font-size:16px;
+margin-top:10px;
+cursor:pointer;
+}
+
+.btn-primary{
+background:#4c6ef5;
+color:white;
+}
+
+.btn-danger{
+background:#fa5252;
+color:white;
+}
+
+.grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:15px;
+}
+
+.stat{
+font-size:48px;
+font-weight:bold;
+color:#4c6ef5;
+}
+
+.stat1{
+font-size:28px;
+font-weight:bold;
+color:#4c6ef5;
+}
+
+.label{
+font-size:12px;
+color:#666;
+}
+
+input{
+width:100%;
+padding:12px;
+margin-bottom:10px;
+border-radius:8px;
+border:1px solid #ccc;
+}
+
+.status{
+font-weight:bold;
+color:#16a34a;
+font-size:16px;
+}
+
+.keterangan{
+color:#555;
+font-size:13px;
+}
+
+.hidden{display:none}
+
+</style>
+
 </head>
 <body>
-  <div class="iframe-container">
-    <iframe
-      id="app"
-      src="https://script.google.com/macros/s/AKfycbyGIupzozfnyVRiddbxt3Cznq1wg2J8ewD0eDcQfji5fXz1SimNrdP7CQvE9WpIAkafdw/exec"
-      scrolling="yes"
-      allowfullscreen="true"
-      webkitallowfullscreen="true"
-      mozallowfullscreen="true"
-      allow="fullscreen; camera; microphone; display-capture; geolocation;">
-    </iframe>
-  </div>
-</body>
 
+<div class="container">
+
+<!-- LOGIN -->
+
+<div id="loginPage" class="card">
+
+<h2 class="center">Login Absensi</h2>
+
+<input id="username" placeholder="Username">
+<input id="password" type="password" placeholder="Password">
+
+<button class="btn btn-primary" onclick="login()">LOGIN</button>
+
+</div>
+
+<!-- DASHBOARD -->
+
+<div id="dashboardPage" class="hidden">
+
+<div class="card center">
+
+<div id="role"></div>
+
+<img id="foto" class="avatar">
+
+<h2 id="nama"></h2>
+
+<div id="jabatan"></div>
+<div id="wa"></div>
+<div id="email"></div>
+<div id="alamat"></div>
+
+</div>
+
+<!-- ABSEN -->
+<div class="card">
+
+<center><div id="ket"></div></center>
+<div class="grid">
+
+<div class="center">
+<div id="jamMasuk" class="stat">08:00</div>
+<div class="label">ABSEN MASUK</div>
+</div>
+
+<div class="center">
+<div id="jamPulang" class="stat">15:00</div>
+<div class="label">ABSEN PULANG</div>
+</div>
+
+</div>
+
+<button class="btn btn-primary" onclick="absenMasuk()">ABSEN MASUK</button>
+
+<button class="btn btn-danger" onclick="absenPulang()">ABSEN PULANG</button>
+
+</div>
+<!-- QR SCAN -->
+<div class="card">
+<button class="btn btn-primary" onclick="startQR('MASUK')">LOG.IN (Scan QR)</button>
+
+<button class="btn btn-danger" onclick="startQR('PULANG')">LOG.OUT (Scan QR)</button>
+<div id="qrScanner" class="hidden">
+  <div id="reader" style="width:100%"></div>
+  <button class="btn btn-danger" onclick="stopScanner()">Tutup Scanner</button>
+</div>
+</div>
+
+<div class="card">
+<div class="grid">
+
+<div class="center">
+<div id="hadir" class="stat1">0</div>
+<div class="label">Hadir</div>
+</div>
+
+<div class="center">
+<div id="terlambat" class="stat1">0</div>
+<div class="label">Terlambat</div>
+</div>
+
+<div class="center">
+<div id="alpha" class="stat1">0</div>
+<div class="label">Alpha</div>
+</div>
+
+<div class="center">
+<div id="izin" class="stat1">0</div>
+<div class="label">Izin</div>
+</div>
+</div>
+<div class="center"><canvas id="chart"></canvas></div>
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+/*******************
+CONFIG API
+*******************/
+
+const API="https://script.google.com/macros/s/AKfycbxkeuaLRrYwuSPYlmu9DBTeBHwsommvH7NjzM33YHGktgH_p5nPB9QBoBElIPLq9H41/exec"
+
+
+let TOKEN=null
+
+
+/*******************
+LOGIN
+*******************/
+
+async function login(){
+
+const username=document.getElementById("username").value
+const password=document.getElementById("password").value
+
+const form=new URLSearchParams()
+
+form.append("action","login")
+form.append("username",username)
+form.append("password",password)
+
+const res=await fetch(API,{
+method:"POST",
+body:form
+})
+
+const data=await res.json()
+
+if(data.ok){
+
+TOKEN=data.token
+
+localStorage.token=TOKEN
+
+loadDashboard()
+
+}else{
+
+alert("Login gagal")
+
+}
+
+}
+
+/*******************
+DASHBOARD
+*******************/
+
+async function loadDashboard(){
+
+TOKEN=localStorage.token
+
+const form=new URLSearchParams()
+
+form.append("action","dashboard")
+form.append("token",TOKEN)
+
+const res=await fetch(API,{
+method:"POST",
+body:form
+})
+
+const data=await res.json()
+
+if(!data.ok){
+
+localStorage.removeItem("token")
+location.reload()
+return
+
+}
+
+document.getElementById("loginPage").style.display="none"
+document.getElementById("hadir").innerText = data.stats.hadir
+document.getElementById("terlambat").innerText = data.stats.terlambat
+document.getElementById("izin").innerText = data.stats.izin
+document.getElementById("alpha").innerText = data.stats.alpha
+document.getElementById("dashboardPage").classList.remove("hidden")
+
+document.getElementById("role").innerHTML="PEGAWAI"
+
+document.getElementById("nama").innerText=data.nama
+
+loadProfil()
+loadAbsenHariIni()
+
+loadChart(data.stats)
+
+setInterval(loadAbsenHariIni,3000)
+
+}
+
+/*******************
+PROFIL
+*******************/
+
+async function loadProfil(){
+
+const form=new URLSearchParams()
+
+form.append("action","profil")
+form.append("token",TOKEN)
+
+const res=await fetch(API,{
+method:"POST",
+body:form
+})
+
+const p=await res.json()
+
+document.getElementById("foto").src=p.foto
+document.getElementById("jabatan").innerText="Jabatan : "+p.jabatan
+document.getElementById("wa").innerText="No WA : "+p.wa
+document.getElementById("email").innerText="Email : "+p.email
+document.getElementById("alamat").innerText="Alamat : "+p.alamat
+
+}
+
+/*******************
+ABSEN
+*******************/
+async function loadAbsenHariIni(){
+
+const form=new URLSearchParams()
+
+form.append("action","absenHariIni")
+form.append("token",TOKEN)
+
+const res=await fetch(API,{
+method:"POST",
+body:form
+})
+
+const d=await res.json()
+
+if(!d.ok) return
+
+document.getElementById("jamMasuk").innerText=d.masuk || "-"
+document.getElementById("jamPulang").innerText=d.pulang || "-"
+
+if(d.status){
+
+document.getElementById("ket").innerHTML =
+"<div class='status'>"+d.status+"</div>"+
+"<div class='keterangan'>"+d.ket+"</div>"
+
+}else{
+
+document.getElementById("ket").innerText="BELUM ABSEN"
+
+}
+
+}
+/*******************
+ABSEN MASUK
+*******************/
+async function absenMasuk(){
+
+navigator.geolocation.getCurrentPosition(async function(pos){
+
+const lat = pos.coords.latitude
+const lng = pos.coords.longitude
+
+const form=new URLSearchParams()
+
+form.append("action","absenMasuk")
+form.append("token",TOKEN)
+form.append("lat",lat)
+form.append("lng",lng)
+
+const res=await fetch(API,{
+method:"POST",
+body:form
+})
+
+const data=await res.json()
+
+if(data.ok){
+
+document.getElementById("ket").innerText="Berhasil absen masuk"
+loadAbsenHariIni()
+
+}else{
+
+alert(data.msg)
+
+}
+
+})
+
+}
+/*******************
+ABSEN PULANG
+*******************/
+async function absenPulang(){
+
+navigator.geolocation.getCurrentPosition(async function(pos){
+
+const lat = pos.coords.latitude
+const lng = pos.coords.longitude
+
+const form=new URLSearchParams()
+
+form.append("action","absenPulang")
+form.append("token",TOKEN)
+form.append("lat",lat)
+form.append("lng",lng)
+
+const res=await fetch(API,{
+method:"POST",
+body:form
+})
+
+const data=await res.json()
+
+if(data.ok){
+
+document.getElementById("ket").innerText="Berhasil absen pulang"
+loadAbsenHariIni()
+
+}else{
+
+alert(data.msg)
+
+}
+
+})
+
+}
+
+/*******************
+CHART
+*******************/
+
+function loadChart(stats){
+
+const ctx=document.getElementById("chart")
+
+new Chart(ctx,{
+
+type:"doughnut",
+
+data:{
+labels:["Hadir","Terlambat","Izin","Alpha"],
+
+datasets:[{
+data:[
+stats.hadir,
+stats.terlambat,
+stats.izin,
+stats.alpha
+]
+}]
+}
+
+})
+
+}
+
+/*******************
+AUTO LOGIN
+*******************/
+
+if(localStorage.token){
+
+loadDashboard()
+
+}
+
+/*******************
+QR Code SCAN
+*******************/
+let html5QrCode
+let scanMode = null
+let QR_SECRET = null
+
+async function getQRSecret(){
+
+const form=new URLSearchParams()
+form.append("action","getQR")
+
+const res=await fetch(API,{
+method:"POST",
+body:form
+})
+
+const data=await res.json()
+
+QR_SECRET = data.secret
+
+}
+
+async function startQR(mode){
+
+scanMode = mode
+
+if(!QR_SECRET){
+await getQRSecret()
+}
+
+document.getElementById("qrScanner").classList.remove("hidden")
+
+html5QrCode = new Html5Qrcode("reader")
+
+html5QrCode.start(
+{ facingMode: "environment" },
+{
+fps:10,
+qrbox:250
+},
+(qrCodeMessage)=>{
+
+if(qrCodeMessage.trim() === QR_SECRET){
+
+stopScanner()
+
+if(scanMode==="MASUK"){
+absenMasuk()
+}
+
+if(scanMode==="PULANG"){
+absenPulang()
+}
+
+}else{
+
+alert("QR Code tidak valid")
+
+}
+
+}
+)
+
+}
+
+function stopScanner(){
+
+if(html5QrCode){
+html5QrCode.stop()
+}
+
+document.getElementById("qrScanner").classList.add("hidden")
+
+}
+
+</script>
+
+</body>
 </html>
