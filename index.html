@@ -11,561 +11,1147 @@
 
 <style>
 
-body{
-font-family:Arial;
-background:#f3f5ff;
-margin:0;
+/* ======================
+   GLOBAL
+====================== */
+
+body {
+  font-family: Arial;
+  background: #f3f5ff;
+  margin: 0;
 }
 
-.container{
-max-width:480px;
-margin:auto;
-padding:20px;
+.container {
+  max-width: 480px;
+  margin: auto;
+  padding: 20px;
 }
 
-.card{
-background:white;
-border-radius:15px;
-padding:20px;
-margin-bottom:15px;
-box-shadow:0 3px 10px rgba(0,0,0,0.1);
+.hidden {
+  display: none;
 }
 
-.center{text-align:center}
-
-img.avatar{
-width:120px;
-height:120px;
-border-radius:100%;
-object-fit:cover;
+.center {
+  text-align: center;
 }
 
-.btn{
-width:100%;
-padding:14px;
-border:none;
-border-radius:10px;
-font-size:16px;
-margin-top:10px;
-cursor:pointer;
+
+/* ======================
+   CARD
+====================== */
+
+.card {
+  background: white;
+  border-radius: 15px;
+  padding: 20px;
+  margin-bottom: 15px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.1);
 }
 
-.btn-primary{
-background:#4c6ef5;
-color:white;
+
+/* ======================
+   PROFILE
+====================== */
+
+img.avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 100%;
+  object-fit: cover;
 }
 
-.btn-danger{
-background:#fa5252;
-color:white;
+
+/* ======================
+   BUTTON
+====================== */
+
+.btn {
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  margin-top: 10px;
+  cursor: pointer;
 }
 
-.grid{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:15px;
+.btn-primary {
+  background: #4c6ef5;
+  color: white;
 }
 
-.stat{
-font-size:48px;
-font-weight:bold;
-color:#4c6ef5;
+.btn-danger {
+  background: #fa5252;
+  color: white;
 }
 
-.stat1{
-font-size:28px;
-font-weight:bold;
-color:#4c6ef5;
+
+/* ======================
+   GRID
+====================== */
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
 }
 
-.label{
-font-size:12px;
-color:#666;
+
+/* ======================
+   STAT
+====================== */
+
+.stat {
+  font-size: 48px;
+  font-weight: bold;
+  color: #4c6ef5;
 }
 
-input{
-width:100%;
-padding:12px;
-margin-bottom:10px;
-border-radius:8px;
-border:1px solid #ccc;
+.stat1 {
+  font-size: 28px;
+  font-weight: bold;
+  color: #4c6ef5;
 }
 
-.status{
-font-weight:bold;
-color:#16a34a;
-font-size:16px;
+.label {
+  font-size: 12px;
+  color: #666;
 }
 
-.keterangan{
-color:#555;
-font-size:13px;
+
+/* ======================
+   FORM
+====================== */
+
+input {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+/* ======================
+   PopUp Alasan Pulang cepat
+====================== */
+	.modal{
+	position:fixed;
+	top:0;
+	left:0;
+	width:100%;
+	height:100%;
+	background:rgba(0,0,0,0.4);
+	display:none;
+	align-items:center;
+	justify-content:center;
+	z-index:999;
+	}
+
+	.modal-card{
+	background:#fff;
+	padding:20px;
+	border-radius:10px;
+	width:300px;
+	box-shadow:0 5px 20px rgba(0,0,0,0.2);
+	}
+
+	.modal-card h3{
+	margin-top:0;
+	}
+
+	.modal-card textarea{
+	width:100%;
+	height:80px;
+	margin-top:10px;
+	padding:8px;
+	border-radius:6px;
+	border:1px solid #ccc;
+	}
+
+	.modal-btn{
+	margin-top:15px;
+	text-align:right;
+	}
+
+	.modal-btn button{
+	margin-left:5px;
+	padding:6px 12px;
+	border:none;
+	border-radius:6px;
+	cursor:pointer;
+	}
+/* ======================
+   STATUS
+====================== */
+
+.status {
+  font-weight: bold;
+  color: #16a34a;
+  font-size: 16px;
 }
 
-.hidden{display:none}
+.keterangan {
+  color: #555;
+  font-size: 13px;
+}
 
 </style>
 
 </head>
 <body>
-
 <div class="container">
 
-<!-- LOGIN -->
+  <!-- ================= LOGIN ================= -->
+  <div id="loginPage" class="card">
 
-<div id="loginPage" class="card">
+    <h2 class="center">Login Absensi</h2>
 
-<h2 class="center">Login Absensi</h2>
+    <input id="username" placeholder="Username">
+    <input id="password" type="password" placeholder="Password">
 
-<input id="username" placeholder="Username">
-<input id="password" type="password" placeholder="Password">
+    <button class="btn btn-primary" onclick="login()">
+      LOGIN
+    </button>
 
-<button class="btn btn-primary" onclick="login()">LOGIN</button>
+  </div>
 
-</div>
 
-<!-- DASHBOARD -->
+  <!-- ================= DASHBOARD ================= -->
+  <div id="dashboardPage" class="hidden">
 
-<div id="dashboardPage" class="hidden">
+    <!-- ========= PROFILE ========= -->
+	<div id="cardProfil" class="card center">
+	  <div id="role"></div>
+	  <img id="foto" class="avatar">
+	  <h2 id="nama"></h2>
+	  <div id="jabatan"></div>
+	  <div id="wa"></div>
+	  <div id="email"></div>
+	  <div id="alamat"></div>
+	  <button class="btn btn-danger" onclick="logout()">
+		Logout
+	  </button>
+	</div>
 
-<div class="card center">
+    <!-- ========= ABSEN HARI INI ========= -->
+    <div id="cardAbsenHariIni" class="card center">
 
-<div id="role"></div>
+      <div id="ket"></div>
+      <div class="grid">
 
-<img id="foto" class="avatar">
+        <div class="center">
+          <div id="jamMasuk" class="stat">08:00</div>
+          <div class="label">ABSEN MASUK</div>
+        </div>
 
-<h2 id="nama"></h2>
+        <div class="center">
+          <div id="jamPulang" class="stat">15:00</div>
+          <div class="label">ABSEN PULANG</div>
+        </div>
 
-<div id="jabatan"></div>
-<div id="wa"></div>
-<div id="email"></div>
-<div id="alamat"></div>
+      </div>
 
-</div>
+    </div>
 
-<!-- ABSEN -->
-<div class="card">
 
-<center><div id="ket"></div></center>
-<div class="grid">
+    <!-- ========= BUTTON ABSEN ========= -->
+    <div id="cardAbsen" class="card center">
+   
+      <button class="btn btn-primary" onclick="absenMasuk()">
+        ABSEN MASUK
+      </button>
 
-<div class="center">
-<div id="jamMasuk" class="stat">08:00</div>
-<div class="label">ABSEN MASUK</div>
-</div>
+      <button class="btn btn-danger" onclick="absenPulang()">
+        ABSEN PULANG
+      </button>
 
-<div class="center">
-<div id="jamPulang" class="stat">15:00</div>
-<div class="label">ABSEN PULANG</div>
-</div>
+    </div>
 
-</div>
 
-<button class="btn btn-primary" onclick="absenMasuk()">ABSEN MASUK</button>
+    <!-- ========= QR SCAN ========= -->
+    <div id="cardQR" class="card center">
 
-<button class="btn btn-danger" onclick="absenPulang()">ABSEN PULANG</button>
+      <button class="btn btn-primary" onclick="startQR('MASUK')">
+        LOG.IN (Scan QR)
+      </button>
 
-</div>
-<!-- QR SCAN -->
-<div class="card">
-<button class="btn btn-primary" onclick="startQR('MASUK')">LOG.IN (Scan QR)</button>
+      <button class="btn btn-danger" onclick="startQR('PULANG')">
+        LOG.OUT (Scan QR)
+      </button>
 
-<button class="btn btn-danger" onclick="startQR('PULANG')">LOG.OUT (Scan QR)</button>
-<div id="qrScanner" class="hidden">
-  <div id="reader" style="width:100%"></div>
-  <button class="btn btn-danger" onclick="stopScanner()">Tutup Scanner</button>
-</div>
-</div>
+      <div id="qrScanner" class="hidden">
 
-<div class="card">
-<div class="grid">
+        <div id="reader" style="width:100%"></div>
 
-<div class="center">
-<div id="hadir" class="stat1">0</div>
-<div class="label">Hadir</div>
-</div>
+        <button class="btn btn-danger" onclick="stopScanner()">
+          Tutup Scanner
+        </button>
 
-<div class="center">
-<div id="terlambat" class="stat1">0</div>
-<div class="label">Terlambat</div>
-</div>
+      </div>
 
-<div class="center">
-<div id="alpha" class="stat1">0</div>
-<div class="label">Alpha</div>
-</div>
+    </div>
 
-<div class="center">
-<div id="izin" class="stat1">0</div>
-<div class="label">Izin</div>
-</div>
-</div>
-<div class="center"><canvas id="chart"></canvas></div>
-</div>
 
-</div>
+    <!-- ========= ADD USER ========= -->
+    <div id="cardAddUser" class="card center">
+
+      <h3>Tambah User</h3>
+
+      <input id="addusername" placeholder="Username">
+      <input id="addpassword" placeholder="Password">
+      <input id="addnipd" placeholder="NIPD">
+      <input id="addnama" placeholder="Nama">
+      <input id="addjabatan" placeholder="Jabatan">
+      <input id="addwa" placeholder="No WA">
+      <input id="addemail" placeholder="Email">
+      <input id="addalamat" placeholder="Alamat">
+
+      <select id="addrole">
+        <option value="PEGAWAI">PEGAWAI</option>
+        <option value="KEPALA">KEPALA</option>
+        <option value="ADMIN">ADMIN</option>
+      </select>
+
+      <br><br>
+
+      <button id="btnUser" onclick="addUser()">Tambah</button>
+
+    </div>
+
+
+    <!-- ========= MANAGEMENT USERS ========= -->
+    <div id="cardUsers" class="card center">
+
+      <h2>Manajemen User</h2>
+
+      <button onclick="loadUsers()">Refresh</button>
+
+      <table border="1" width="100%">
+
+        <thead>
+          <tr>
+            <th>Username</th>
+            <th>Nama</th>
+            <th>Jabatan</th>
+            <th>Role</th>
+            <th>Aksi</th>
+          </tr>
+        </thead>
+
+        <tbody id="usersTable"></tbody>
+
+      </table>
+
+    </div>
+
+
+    <!-- ========= MONITOR PRIBADI ========= -->
+    <div id="cardMonitor" class="card center">
+
+      <div class="grid">
+
+        <div class="center">
+          <div id="hadir" class="stat1">0</div>
+          <div class="label">Hadir</div>
+        </div>
+
+        <div class="center">
+          <div id="terlambat" class="stat1">0</div>
+          <div class="label">Terlambat</div>
+        </div>
+
+        <div class="center">
+          <div id="alpha" class="stat1">0</div>
+          <div class="label">Alpha</div>
+        </div>
+
+        <div class="center">
+          <div id="izin" class="stat1">0</div>
+          <div class="label">Izin</div>
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- ========= CHART ========= -->
+    <div id="cardChart" class="card center">
+
+      <div class="center">
+        <canvas id="chart"></canvas>
+      </div>
+
+    </div>
+	<div id="modalAlasan" class="modal">
+	  <div class="modal-card">
+		<h3>⚠ Pulang Lebih Cepat</h3>
+		<p>Anda pulang sebelum jam kerja selesai.<br>
+		Silakan isi alasan.</p>
+			<textarea id="inputAlasan" placeholder="Tulis alasan...">
+			</textarea>
+			<div class="modal-btn">
+			  <button onclick="batalAlasan()">Batal</button>
+			  <button onclick="kirimAlasan()">Lanjutkan</button>
+			</div>
+	  </div>
+	</div>
+  </div>
 
 </div>
 
 <script>
 
-/*******************
-CONFIG API
-*******************/
+/* ========
+   CONFIG
+=========== */
 
-const API="https://script.google.com/macros/s/AKfycbxkeuaLRrYwuSPYlmu9DBTeBHwsommvH7NjzM33YHGktgH_p5nPB9QBoBElIPLq9H41/exec"
+const API = "https://script.google.com/macros/s/AKfycbxkeuaLRrYwuSPYlmu9DBTeBHwsommvH7NjzM33YHGktgH_p5nPB9QBoBElIPLq9H41/exec";
+
+let TOKEN = null;
+/* =========================
+   ROLE UI CONFIG
+========================= */
+/* =========================
+   ROLE UI CONFIG
+========================= */
+
+const ROLE_UI = {
+
+PEGAWAI:[
+"cardAbsenHariIni",
+"cardQR",
+"cardChart",
+"cardMonitor",
+"cardAbsen"
+],
+
+KEPALA:[
+"cardChart",
+"cardMonitor"
+],
+
+ADMIN:[
+"cardAddUser",
+"cardUsers",
+"cardChart"
+]
+
+};
+
+/* =========================
+   DAFTAR SEMUA CARD
+========================= */
+
+const ALL_CARDS = [
+"cardAbsenHariIni",
+"cardQR",
+"cardChart",
+"cardMonitor",
+"cardAddUser",
+"cardUsers",
+"cardAbsen"
+];
+
+/* =========================
+   SETUP ROLE UI
+========================= */
+
+function setupRoleUI(role){
+
+  // sembunyikan semua card
+  ALL_CARDS.forEach(id=>{
+    const el = document.getElementById(id);
+    if(el) el.style.display = "none";
+  });
+
+  // tampilkan card sesuai role
+  ROLE_UI[role]?.forEach(id=>{
+    const el = document.getElementById(id);
+    if(el) el.style.display = "block";
+  });
+
+}
+/* ==============
+	Update status
+================= */
+function updateStats(stats){
+
+  if(!stats) return;
+
+  hadir.innerText = stats.hadir ?? 0;
+  terlambat.innerText = stats.terlambat ?? 0;
+  izin.innerText = stats.izin ?? 0;
+  alpha.innerText = stats.alpha ?? 0;
+
+}
+
+const ROLE_HANDLER = {
+
+PEGAWAI(data){
+
+  updateStats(data.stats);
+
+  loadAbsenHariIni();
+  loadChart(data.stats);
+
+  setInterval(loadAbsenHariIni,3000);
+
+},
+
+KEPALA(data){
+
+  updateStats(data.stats);
+
+  loadChart(data.stats);
+
+},
+
+ADMIN(data){
+
+  loadUsers();
+  loadChart(data.stats);
+  generateNIPD();
+
+}
+
+};
+/* ===========
+	Dashboard
+	========== */
+async function loadDashboard(){
+
+  try{
+
+    TOKEN = localStorage.getItem("token");
+
+    if(!TOKEN){
+      location.reload();
+      return;
+    }
+
+    const form = new URLSearchParams();
+    form.append("action","dashboard");
+    form.append("token",TOKEN);
+
+    const res = await fetch(API,{
+      method:"POST",
+      body:form
+    });
+
+    const data = await res.json();
+
+    if(!data.ok){
+      localStorage.removeItem("token");
+      location.reload();
+      return;
+    }
+
+    // =========================
+    // VALIDASI ROLE
+    // =========================
+    const userRole = data.role;
+
+    if(!ROLE_UI[userRole]){
+      alert("Role tidak valid");
+      location.reload();
+      return;
+    }
+
+    // =========================
+    // TAMPILKAN DASHBOARD
+    // =========================
+    document.getElementById("loginPage").style.display = "none";
+    document.getElementById("dashboardPage").classList.remove("hidden");
+
+    document.getElementById("role").innerText = userRole;
+	document.getElementById("nama").innerText = data.nama || "User";
 
 
-let TOKEN=null
+    // =========================
+    // SETUP UI SESUAI ROLE
+    // =========================
+    setupRoleUI(userRole);
 
+    // =========================
+    // LOAD PROFIL
+    // =========================
+    loadProfil();
 
-/*******************
-LOGIN
-*******************/
+    // =========================
+    // JALANKAN ROLE HANDLER
+    // =========================
+    ROLE_HANDLER[userRole]?.(data);
+
+  }
+
+  catch(err){
+
+    console.error("Dashboard error:",err);
+    alert("Terjadi kesalahan sistem");
+
+  }
+
+}
+
+/* ===========
+   LOGIN
+============== */
 
 async function login(){
 
-const username=document.getElementById("username").value
-const password=document.getElementById("password").value
+  const username = document.getElementById("username").value;
+  const password = document.getElementById("password").value;
 
-const form=new URLSearchParams()
+  const form = new URLSearchParams();
 
-form.append("action","login")
-form.append("username",username)
-form.append("password",password)
+  form.append("action","login");
+  form.append("username",username);
+  form.append("password",password);
 
-const res=await fetch(API,{
-method:"POST",
-body:form
-})
+  const res = await fetch(API,{
+    method:"POST",
+    body:form
+  });
 
-const data=await res.json()
+  const data = await res.json();
 
-if(data.ok){
+  if(data.ok){
 
-TOKEN=data.token
+    TOKEN = data.token;
+    localStorage.token = TOKEN;
 
-localStorage.token=TOKEN
+    loadDashboard();
 
-loadDashboard()
-
-}else{
-
-alert("Login gagal")
-
-}
+  }else{
+    alert("Login gagal");
+  }
 
 }
 
-/*******************
-DASHBOARD
-*******************/
-
-async function loadDashboard(){
-
-TOKEN=localStorage.token
-
-const form=new URLSearchParams()
-
-form.append("action","dashboard")
-form.append("token",TOKEN)
-
-const res=await fetch(API,{
-method:"POST",
-body:form
-})
-
-const data=await res.json()
-
-if(!data.ok){
-
-localStorage.removeItem("token")
-location.reload()
-return
-
-}
-
-document.getElementById("loginPage").style.display="none"
-document.getElementById("hadir").innerText = data.stats.hadir
-document.getElementById("terlambat").innerText = data.stats.terlambat
-document.getElementById("izin").innerText = data.stats.izin
-document.getElementById("alpha").innerText = data.stats.alpha
-document.getElementById("dashboardPage").classList.remove("hidden")
-
-document.getElementById("role").innerHTML="PEGAWAI"
-
-document.getElementById("nama").innerText=data.nama
-
-loadProfil()
-loadAbsenHariIni()
-
-loadChart(data.stats)
-
-setInterval(loadAbsenHariIni,3000)
-
-}
-
-/*******************
-PROFIL
-*******************/
+/* ======================================================
+   PROFIL
+====================================================== */
 
 async function loadProfil(){
 
-const form=new URLSearchParams()
+  const form = new URLSearchParams();
+  form.append("action","profil");
+  form.append("token",TOKEN);
 
-form.append("action","profil")
-form.append("token",TOKEN)
+  const res = await fetch(API,{
+    method:"POST",
+    body:form
+  });
 
-const res=await fetch(API,{
-method:"POST",
-body:form
-})
+  const p = await res.json();
 
-const p=await res.json()
-
-document.getElementById("foto").src=p.foto
-document.getElementById("jabatan").innerText="Jabatan : "+p.jabatan
-document.getElementById("wa").innerText="No WA : "+p.wa
-document.getElementById("email").innerText="Email : "+p.email
-document.getElementById("alamat").innerText="Alamat : "+p.alamat
+  document.getElementById("foto").src = p.foto;
+  document.getElementById("jabatan").innerText = "Jabatan : " + p.jabatan;
+  document.getElementById("wa").innerText = "No WA : " + p.wa;
+  document.getElementById("email").innerText = "Email : " + p.email;
+  document.getElementById("alamat").innerText = "Alamat : " + p.alamat;
 
 }
 
-/*******************
-ABSEN
-*******************/
+
+/* ======================================================
+   ABSEN HARI INI
+====================================================== */
+
 async function loadAbsenHariIni(){
 
-const form=new URLSearchParams()
+  const form = new URLSearchParams();
 
-form.append("action","absenHariIni")
-form.append("token",TOKEN)
+  form.append("action","absenHariIni");
+  form.append("token",TOKEN);
 
-const res=await fetch(API,{
-method:"POST",
-body:form
-})
+  const res = await fetch(API,{
+    method:"POST",
+    body:form
+  });
 
-const d=await res.json()
+  const d = await res.json();
 
-if(!d.ok) return
+  if(!d.ok) return;
 
-document.getElementById("jamMasuk").innerText=d.masuk || "-"
-document.getElementById("jamPulang").innerText=d.pulang || "-"
+  document.getElementById("jamMasuk").innerText = d.masuk || "-";
+  document.getElementById("jamPulang").innerText = d.pulang || "-";
 
-if(d.status){
+  if(d.status){
 
-document.getElementById("ket").innerHTML =
-"<div class='status'>"+d.status+"</div>"+
-"<div class='keterangan'>"+d.ket+"</div>"
+    document.getElementById("ket").innerHTML =
+      "<div class='status'>" + d.status + "</div>" +
+      "<div class='keterangan'>" + d.ket + "</div>";
 
-}else{
+  }else{
 
-document.getElementById("ket").innerText="BELUM ABSEN"
+    document.getElementById("ket").innerText = "BELUM ABSEN";
+
+  }
 
 }
 
-}
-/*******************
-ABSEN MASUK
-*******************/
+
+/* ======================================================
+   ABSEN MASUK
+====================================================== */
+
 async function absenMasuk(){
 
-navigator.geolocation.getCurrentPosition(async function(pos){
+  navigator.geolocation.getCurrentPosition(async function(pos){
 
-const lat = pos.coords.latitude
-const lng = pos.coords.longitude
+    const lat = pos.coords.latitude;
+    const lng = pos.coords.longitude;
 
-const form=new URLSearchParams()
+    const form = new URLSearchParams();
 
-form.append("action","absenMasuk")
-form.append("token",TOKEN)
-form.append("lat",lat)
-form.append("lng",lng)
+    form.append("action","absenMasuk");
+    form.append("token",TOKEN);
+    form.append("lat",lat);
+    form.append("lng",lng);
 
-const res=await fetch(API,{
-method:"POST",
-body:form
-})
+    const res = await fetch(API,{
+      method:"POST",
+      body:form
+    });
 
-const data=await res.json()
+    const data = await res.json();
 
-if(data.ok){
+    if(data.ok){
 
-document.getElementById("ket").innerText="Berhasil absen masuk"
-loadAbsenHariIni()
+      document.getElementById("ket").innerText = "Berhasil absen masuk";
+      loadAbsenHariIni();
 
-}else{
+    }else{
 
-alert(data.msg)
+      alert(data.msg);
 
-}
+    }
 
-})
-
-}
-/*******************
-ABSEN PULANG
-*******************/
-async function absenPulang(){
-
-navigator.geolocation.getCurrentPosition(async function(pos){
-
-const lat = pos.coords.latitude
-const lng = pos.coords.longitude
-
-const form=new URLSearchParams()
-
-form.append("action","absenPulang")
-form.append("token",TOKEN)
-form.append("lat",lat)
-form.append("lng",lng)
-
-const res=await fetch(API,{
-method:"POST",
-body:form
-})
-
-const data=await res.json()
-
-if(data.ok){
-
-document.getElementById("ket").innerText="Berhasil absen pulang"
-loadAbsenHariIni()
-
-}else{
-
-alert(data.msg)
+  });
 
 }
 
-})
+
+/* ======================================================
+   ABSEN PULANG
+====================================================== */
+async function absenPulang(alasan=""){
+
+  navigator.geolocation.getCurrentPosition(async function(pos){
+
+    const lat = pos.coords.latitude;
+    const lng = pos.coords.longitude;
+
+    const form = new URLSearchParams();
+
+    form.append("action","absenPulang");
+    form.append("token",TOKEN);
+    form.append("lat",lat);
+    form.append("lng",lng);
+    form.append("alasan",alasan);
+
+    const res = await fetch(API,{
+      method:"POST",
+      body:form
+    });
+
+    const data = await res.json();
+
+    /* =====================
+       PERLU ALASAN
+    ===================== */
+
+    if(data.needReason){
+
+      document.getElementById("modalAlasan").style.display="flex";
+
+      return;
+
+    }
+
+    /* =====================
+       BERHASIL
+    ===================== */
+
+    if(data.ok){
+
+      document.getElementById("ket").innerText="Berhasil absen pulang";
+
+      loadAbsenHariIni();
+
+    }else{
+
+      alert(data.msg);
+
+    }
+
+  });
 
 }
+/* =====================
+   Alasan Pulang Cepat
+ ===================== */
+function kirimAlasan(){
 
-/*******************
-CHART
-*******************/
+	const alasan = document.getElementById("inputAlasan").value.trim()
+
+	if(!alasan){
+	alert("Alasan wajib diisi")
+	return
+	}
+
+	document.getElementById("modalAlasan").style.display="none"
+
+	absenPulang(alasan)
+
+	}
+
+	function batalAlasan(){
+
+	document.getElementById("modalAlasan").style.display="none"
+
+	}
+/* ======================================================
+   CHART
+====================================================== */
+let chartInstance = null;
 
 function loadChart(stats){
 
-const ctx=document.getElementById("chart")
+  const ctx = document.getElementById("chart");
 
-new Chart(ctx,{
+  if(chartInstance){
+    chartInstance.destroy();
+  }
 
-type:"doughnut",
+  chartInstance = new Chart(ctx,{
+    type:"doughnut",
+    data:{
+      labels:["Hadir","Terlambat","Izin","Alpha"],
+      datasets:[{
+        data:[
+          stats.hadir,
+          stats.terlambat,
+          stats.izin,
+          stats.alpha
+        ]
+      }]
+    }
+  });
 
-data:{
-labels:["Hadir","Terlambat","Izin","Alpha"],
-
-datasets:[{
-data:[
-stats.hadir,
-stats.terlambat,
-stats.izin,
-stats.alpha
-]
-}]
 }
-
-})
-
-}
-
-/*******************
-AUTO LOGIN
-*******************/
+/* ======================================================
+   AUTO LOGIN
+====================================================== */
 
 if(localStorage.token){
+  loadDashboard();
+}
 
-loadDashboard()
+
+/* ======================================================
+   LOAD USERS
+====================================================== */
+
+async function loadUsers(){
+
+  const params = new URLSearchParams();
+
+  params.append("action","users");
+  params.append("token",localStorage.getItem("token"));
+
+  const res = await fetch(API,{
+    method:"POST",
+    body:params
+  });
+
+  const data = await res.json();
+
+  if(!data.ok){
+    alert(data.msg);
+    return;
+  }
+
+  const table = document.getElementById("usersTable");
+  table.innerHTML = "";
+
+  data.data.forEach(u=>{
+
+    table.innerHTML += `
+      <tr>
+        <td>${u.username}</td>
+        <td>${u.nama}</td>
+        <td>${u.jabatan}</td>
+        <td>${u.role}</td>
+        <td>
+          <button onclick='editUser(${JSON.stringify(u)})'>Edit</button>
+          <button onclick="deleteUser('${u.username}','${u.nipd}')">Hapus</button>
+        </td>
+      </tr>
+    `;
+
+  });
 
 }
 
-/*******************
-QR Code SCAN
-*******************/
-let html5QrCode
-let scanMode = null
-let QR_SECRET = null
+/* ============
+  Generat NIPD
+  ============= */
+async function generateNIPD(){
+
+  const params = new URLSearchParams();
+  params.append("action","generateNIPD");
+
+  const res = await fetch(API,{
+    method:"POST",
+    body:params
+  });
+
+  const data = await res.json();
+
+  document.getElementById("addnipd").value = data.nipd;
+  document.getElementById("addnipd").readOnly = true;
+
+}
+/* =============
+   ADD USER
+============== */
+async function addUser(){
+
+  if(!validateUserForm()) return;
+
+  const params = new URLSearchParams();
+
+  const action = window.MODE_EDIT ? "updateUser" : "addUser";
+
+  params.append("action", action);
+  params.append("token",localStorage.getItem("token"));
+
+  params.append("username",document.getElementById("addusername").value);
+  params.append("password",document.getElementById("addpassword").value);
+  params.append("nipd",document.getElementById("addnipd").value);
+  params.append("nama",document.getElementById("addnama").value);
+  params.append("jabatan",document.getElementById("addjabatan").value);
+  params.append("wa",document.getElementById("addwa").value);
+  params.append("email",document.getElementById("addemail").value);
+  params.append("alamat",document.getElementById("addalamat").value);
+  params.append("role",document.getElementById("addrole").value);
+
+  const res = await fetch(API,{
+    method:"POST",
+    body:params
+  });
+
+  const data = await res.json();
+
+  alert(data.msg);
+
+  if(data.ok){
+    clearUserForm();
+    loadUsers();
+  }
+
+}
+/** VALIDASI FORM **/
+function validateUserForm(){
+
+  const fields = [
+    {id:"addusername", name:"Username"},
+    {id:"addpassword", name:"Password"},
+    {id:"addnipd", name:"NIPD"},
+    {id:"addnama", name:"Nama"},
+    {id:"addjabatan", name:"Jabatan"},
+    {id:"addwa", name:"No WA"},
+    {id:"addemail", name:"Email"},
+    {id:"addalamat", name:"Alamat"}
+  ];
+
+  for(let f of fields){
+
+    const el = document.getElementById(f.id);
+
+    if(!el.value.trim()){
+
+      alert(f.name+" belum diisi");
+
+      el.focus();
+      el.style.border="2px solid red";
+
+      return false;
+
+    }
+
+    el.style.border="1px solid #ccc";
+
+  }
+
+  return true;
+
+}
+
+/** CLEAR FORM **/
+function clearUserForm(){
+
+  document.getElementById("addusername").value="";
+  document.getElementById("addpassword").value="";
+  document.getElementById("addnipd").value="";
+  document.getElementById("addnama").value="";
+  document.getElementById("addjabatan").value="";
+  document.getElementById("addwa").value="";
+  document.getElementById("addemail").value="";
+  document.getElementById("addalamat").value="";
+
+  document.getElementById("addrole").value="PEGAWAI";
+
+  document.getElementById("addusername").readOnly=false;
+  document.getElementById("addnipd").readOnly=false;
+
+  document.getElementById("btnUser").innerText="Tambah";
+
+  window.MODE_EDIT=false;
+
+  generateNIPD(); // otomatis buat NIPD baru
+}
+/* ================
+   DELETE USER
+================= */
+
+async function deleteUser(username,nipd){
+
+  if(!confirm("Hapus user ini?")) return;
+
+  const params = new URLSearchParams();
+
+  params.append("action","deleteUser");
+  params.append("token",localStorage.getItem("token"));
+  params.append("username",username);
+  params.append("nipd",nipd);
+
+  const res = await fetch(API,{
+    method:"POST",
+    body:params
+  });
+
+  const data = await res.json();
+
+  alert(data.msg);
+  loadUsers();
+
+}
+
+
+/* ==============
+   EDIT USER
+=============== */
+function editUser(u){
+  document.getElementById("addusername").value = u.username || "";
+  document.getElementById("addnipd").value = u.nipd || "";
+  document.getElementById("addnama").value = u.nama || "";
+  document.getElementById("addjabatan").value = u.jabatan || "";
+  document.getElementById("addwa").value = u.wa || "";
+  document.getElementById("addemail").value = u.email || "";
+  document.getElementById("addalamat").value = u.alamat || "";
+  document.getElementById("addpassword").value = "";
+  document.getElementById("addrole").value = u.role || "";
+  document.getElementById("addusername").readOnly = true;
+  document.getElementById("addnipd").readOnly = true;
+  document.getElementById("btnUser").innerText = "Update User";
+  window.MODE_EDIT = true;
+}
+/* ============
+   Logout
+============= */
+function logout(){
+
+  if(!confirm("Yakin ingin logout?")) return;
+
+  localStorage.removeItem("token");
+  TOKEN = null;
+
+  location.reload();
+
+}
+/* ======================================================
+   QR SCANNER
+====================================================== */
+
+let html5QrCode;
+let scanMode = null;
+let QR_SECRET = null;
+let scanOnce = false;
+
 
 async function getQRSecret(){
 
-const form=new URLSearchParams()
-form.append("action","getQR")
+  const form = new URLSearchParams();
+  form.append("action","getQR");
 
-const res=await fetch(API,{
-method:"POST",
-body:form
-})
+  const res = await fetch(API,{
+    method:"POST",
+    body:form
+  });
 
-const data=await res.json()
-
-QR_SECRET = data.secret
+  const data = await res.json();
+  QR_SECRET = data.secret;
 
 }
+
 
 async function startQR(mode){
 
-scanMode = mode
-scanOnce = false
+  scanMode = mode;
+  scanOnce = false;
 
-if(!QR_SECRET){
-await getQRSecret()
-}
+  if(!QR_SECRET){
+    await getQRSecret();
+  }
 
-document.getElementById("qrScanner").classList.remove("hidden")
+  document.getElementById("qrScanner").classList.remove("hidden");
 
-if(html5QrCode){
-try{
-await html5QrCode.stop()
-}catch(e){}
-}
+  if(html5QrCode){
+    try{
+      await html5QrCode.stop();
+    }catch(e){}
+  }
 
-html5QrCode = new Html5Qrcode("reader")
+  html5QrCode = new Html5Qrcode("reader");
 
-html5QrCode.start(
-{ facingMode: "environment" },
-{
-fps:10,
-qrbox:250
-},
-(qrCodeMessage)=>{
+  html5QrCode.start(
+    { facingMode: "environment" },
+    { fps:10, qrbox:250 },
+    (qrCodeMessage)=>{
 
-if(scanOnce) return
+      if(scanOnce) return;
+      scanOnce = true;
 
-scanOnce = true
+      if(qrCodeMessage.trim() === QR_SECRET){
 
-if(qrCodeMessage.trim() === QR_SECRET){
+        stopScanner();
 
-stopScanner()
+        if(scanMode==="MASUK") absenMasuk();
+        if(scanMode==="PULANG") absenPulang();
 
-if(scanMode==="MASUK"){
-absenMasuk()
-}
+      }else{
 
-if(scanMode==="PULANG"){
-absenPulang()
-}
+        alert("QR Code tidak valid");
+        stopScanner();
 
-}else{
+      }
 
-alert("QR Code tidak valid")
-stopScanner()
+    }
+  );
 
 }
 
-}
-)
 
-}
 function stopScanner(){
 
-if(html5QrCode){
-html5QrCode.stop()
-}
+  if(html5QrCode){
+    html5QrCode.stop();
+  }
 
-document.getElementById("qrScanner").classList.add("hidden")
+  document.getElementById("qrScanner").classList.add("hidden");
 
 }
 
@@ -573,4 +1159,3 @@ document.getElementById("qrScanner").classList.add("hidden")
 
 </body>
 </html>
-
